@@ -27,3 +27,18 @@ class VarianMotorBaruResp {
 
   VarianMotorBaruResp({required this.varian, required this.message});
 }
+
+class PriceMotorBaruResp {
+  final String message;
+  final String price;
+
+  PriceMotorBaruResp({required this.message, required this.price});
+
+  factory PriceMotorBaruResp.fromJson(Map<String, dynamic> json) {
+  final data = json['data'];
+  return PriceMotorBaruResp(
+    message: data['message'], 
+    price: data['priceProduct'], 
+  );
+}
+}

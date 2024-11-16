@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:simulation_credit/main.dart';
 import 'package:simulation_credit/views/cubits/cat_motorbaru_cubit.dart';
+import 'package:simulation_credit/views/cubits/price_motorbaru_cubit.dart';
 import 'package:simulation_credit/views/cubits/var_motorbaru_cubit.dart';
 import 'package:simulation_credit/views/screens/motorBaru_page.dart';
 import 'package:simulation_credit/views/screens/testingPage.dart';
@@ -31,6 +32,7 @@ class _ListProductState extends State<ListProduct> {
           providers: [
             BlocProvider(create: (context) => getIt<CatMotorBaruCubit>()),
             BlocProvider(create: (context) => getIt<VarMotorBaruCubit>()),
+            BlocProvider(create: (context) => getIt<PriceMotorBaruCubit>()),
           ],
           child: MotorBaruPage(),
         ),

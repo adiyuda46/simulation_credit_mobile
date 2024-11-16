@@ -6,6 +6,8 @@ import 'package:simulation_credit/views/widget/listProduct.dart';
 import 'package:simulation_credit/views/widget/dropDownProduct.dart';
 import 'package:simulation_credit/data/repositories/cat_motorbaru_repository.dart';
 import '../cubits/cat_motorbaru_cubit.dart';
+import '../cubits/price_motorbaru_cubit.dart';
+import '../widget/listProductForm.dart';
 
 class MotorBaruPage extends StatefulWidget {
   const MotorBaruPage({super.key});
@@ -24,6 +26,9 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
   };
   List<String> _motorCategories = [];
   List<String> _motorVarian = [];
+  String _motorPrice = ""; // Make this nullable to represent no price
+  String selectedJangkaWaktu = "dlld";
+  String selectedUangMuka = "0";
 
   @override
   void initState() {
@@ -47,7 +52,9 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              const ListProduct(),
+              const ListProductForm(
+                currentPage: 'motorBaru',
+              ),
               const SizedBox(height: 24),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 38),
@@ -71,14 +78,19 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
                             onChanged: (value) {
                               setState(() {
                                 _selectedValues['tipeMotor'] = value!;
+                                _selectedVarian['varianMotor'] =
+                                    DEFAULT_OPTION; // Reset varian
+                                _motorPrice =
+                                    ""; // Reset price saat tipe motor diubah
                                 if (value != DEFAULT_OPTION) {
-                                  _selectedVarian['varianMotor'] = DEFAULT_OPTION; // Reset variant
-                                  context.read<VarMotorBaruCubit>().VarianMotorBaru(value);
+                                  context
+                                      .read<VarMotorBaruCubit>()
+                                      .VarianMotorBaru(value);
                                 }
                               });
                             },
                             isRequired: true,
-                            errorText: null, // Handle errors if needed
+                            errorText: null,
                             enabled: true,
                           );
                         }
@@ -96,21 +108,110 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
                         return CustomDropdown(
                           label: "Varian Motor",
                           value: _selectedVarian['varianMotor']!,
-                          items: _motorVarian.isNotEmpty
-                              ? _motorVarian
-                              : [DEFAULT_OPTION],
+                          items: _motorVarian,
                           onChanged: (value) {
-                            if (_selectedValues['tipeMotor'] != DEFAULT_OPTION) {
+                            if (_selectedValues['tipeMotor'] !=
+                                DEFAULT_OPTION) {
                               setState(() {
                                 _selectedVarian['varianMotor'] = value!;
+                                _motorPrice =
+                                    ""; // Reset price saat varian diubah
+                                if (value != DEFAULT_OPTION) {
+                                  context
+                                      .read<PriceMotorBaruCubit>()
+                                      .priceMotorBaru(
+                                        _selectedValues['tipeMotor']!,
+                                        value,
+                                      );
+                                }
                               });
                             }
                           },
                           isRequired: true,
-                          errorText: null, // Handle errors if needed
-                          enabled: _selectedValues['tipeMotor'] != DEFAULT_OPTION, // Enable only if type is selected
+                          errorText: null,
+                          enabled:
+                              _selectedValues['tipeMotor'] != DEFAULT_OPTION,
                         );
                       },
+                    ),
+                    const SizedBox(height: 20),
+                    BlocBuilder<PriceMotorBaruCubit, PriceMotorBaruState>(
+                      //key: Key( _selectedValues['tipeMotor']?? ""),
+                      builder: (context, state) {
+                        String displayedPrice =
+                            _motorPrice == "" ? "" : _motorPrice;
+                        if (state.error.isNotEmpty) {
+                          return Center(child: Text('Error: ${state.error}'));
+                        } else if (state.priceMotorBaruResp != null &&
+                            _selectedVarian['varianMotor'] != DEFAULT_OPTION &&
+                            _motorPrice == "") {
+                          displayedPrice = state.priceMotorBaruResp!
+                              .price; // Mengambil harga dari response
+                          print("harga baru update :${displayedPrice}");
+                        } else {
+                          displayedPrice = "";
+                        }
+
+                        return Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                "Harga Motor",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Container(
+                              height: 50,
+                              width: 300,
+                              key: Key("harga-${displayedPrice}"),
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: ColorUtil.primaryColor),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                'Rp. ${displayedPrice}',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                    Row(
+                      children: [
+                        CustomDropdown(
+                          label: 'Jangka Waktu',
+                          value: selectedJangkaWaktu,
+                          items: [
+                            'silakan',
+                            '12 bulan',
+                            '24 bulan',
+                            '36 bulan'
+                          ],
+                          onChanged: (value) {
+                            setState(() {
+                              selectedJangkaWaktu = value!;
+                            });
+                          },
+                          enabled: true,
+                        ),
+                        const SizedBox(height: 16),
+                        CustomDropdown(
+                          label: 'Uang Muka',
+                          value: selectedUangMuka,
+                          items: ['silakan', '10%', '20%', '30%'],
+                          onChanged: (value) {
+                            setState(() {
+                              selectedUangMuka = value!;
+                            });
+                          },
+                          enabled: true,
+                        ),
+                      ],
                     )
                   ],
                 ),
