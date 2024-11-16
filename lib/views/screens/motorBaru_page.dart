@@ -17,6 +17,7 @@ class MotorBaruPage extends StatefulWidget {
 }
 
 class _MotorBaruPageState extends State<MotorBaruPage> {
+  // global variable
   static const String DEFAULT_OPTION = 'Silakan pilih';
   Map<String, String?> _selectedValues = {
     'tipeMotor': DEFAULT_OPTION,
@@ -27,8 +28,11 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
   List<String> _motorCategories = [];
   List<String> _motorVarian = [];
   String _motorPrice = ""; // Make this nullable to represent no price
-  String selectedJangkaWaktu = "dlld";
-  String selectedUangMuka = "0";
+  String selectedJangkaWaktu = 'Silakan pilih'; // Inisialisasi dengan pilihan awal
+  String selectedUangMuka = 'Silakan pilih';
+  int? selectedUangMukaValue; // Untuk menyimpan nilai Uang Muka sebagai integer
+  int?
+      selectedJangkaWaktuValue; // Untuk menyimpan nilai Jangka Waktu sebagai integer
 
   @override
   void initState() {
@@ -134,7 +138,7 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
                         );
                       },
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 50),
                     BlocBuilder<PriceMotorBaruCubit, PriceMotorBaruState>(
                       //key: Key( _selectedValues['tipeMotor']?? ""),
                       builder: (context, state) {
@@ -181,35 +185,48 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
                         );
                       },
                     ),
+                     const SizedBox(height: 20),
                     Row(
                       children: [
-                        CustomDropdown(
-                          label: 'Jangka Waktu',
-                          value: selectedJangkaWaktu,
-                          items: [
-                            'silakan',
-                            '12 bulan',
-                            '24 bulan',
-                            '36 bulan'
-                          ],
-                          onChanged: (value) {
-                            setState(() {
-                              selectedJangkaWaktu = value!;
-                            });
-                          },
-                          enabled: true,
+                        Expanded(
+                          child: CustomDropdown(
+                            label: 'Jangka Waktu',
+                            value: selectedJangkaWaktu,
+                            items: [
+                              
+                              '12 bulan',
+                              '24 bulan',
+                              '36 bulan'
+                            ],
+                            onChanged: (value) {
+                              setState(() {
+                                selectedJangkaWaktu = value ?? 'Silakan pilih';
+                                // Konversi string ke integer, abaikan 'Silakan pilih'
+                                selectedJangkaWaktuValue = value == 'Silakan pilih'
+                                    ? null
+                                    : int.parse(value!.split(' ')[0]);
+                              });
+                            },
+                            enabled: true,
+                          ),
                         ),
-                        const SizedBox(height: 16),
-                        CustomDropdown(
-                          label: 'Uang Muka',
-                          value: selectedUangMuka,
-                          items: ['silakan', '10%', '20%', '30%'],
-                          onChanged: (value) {
-                            setState(() {
-                              selectedUangMuka = value!;
-                            });
-                          },
-                          enabled: true,
+                        const SizedBox(width: 16), // Spacing between dropdowns
+                        Expanded(
+                          child: CustomDropdown(
+                            label: 'Uang Muka',
+                            value: selectedUangMuka,
+                            items: [ '10%', '20%', '30%'],
+                            onChanged: (value) {
+                              setState(() {
+                                selectedUangMuka = value ?? 'Silakan pilih';
+                                // Konversi string ke integer, abaikan 'Silakan pilih'
+                                selectedUangMukaValue = value == 'Silakan pilih'
+                                    ? null
+                                    : int.parse(value!.replaceAll('%', ''));
+                              });
+                            },
+                            enabled: true,
+                          ),
                         ),
                       ],
                     )
