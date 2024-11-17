@@ -29,4 +29,8 @@ class SimulasiCubit extends Cubit<SimulasiState> {
       emit(SimulasiState(error: e.toString())); // Emit state dengan pesan kesalahan
     }
   }
+  // set s
+  setSimulationInfo(bool info){
+    emit(SimulasiState(showSimulationInfo: info));
+  }
 }

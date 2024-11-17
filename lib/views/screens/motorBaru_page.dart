@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:simulation_credit/core/utils/colors/colors.dart';
 import 'package:simulation_credit/views/cubits/simulasi_cubit.dart';
 import 'package:simulation_credit/views/cubits/var_motorbaru_cubit.dart';
@@ -72,7 +73,9 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
                     BlocBuilder<CatMotorBaruCubit, CatMotorBaruState>(
                       builder: (context, state) {
                         if (state is CatMotorBaruInitial) {
-                          return Center(child: CircularProgressIndicator());
+                          //return Center(child: CircularProgressIndicator());
+                          return _buildShimmer();
+                          
                         } else if (state.error != null) {
                           return Center(child: Text('Error: ${state.error}'));
                         } else if (state.categoryMotorBaruResp != null) {
@@ -109,7 +112,7 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
                     const SizedBox(height: 20),
                     BlocBuilder<VarMotorBaruCubit, VarMotorBaruState>(
                       builder: (context, state) {
-                        if (state.error != null) {
+                         if (state.error != null) {
                           return Center(child: Text('Error: ${state.error}'));
                         } else if (state.varianMotorBaruResp != null) {
                           _motorVarian = state.varianMotorBaruResp!.varian;
@@ -119,6 +122,7 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
                           value: _selectedVarian['varianMotor']!,
                           items: _motorVarian,
                           onChanged: (value) {
+                            context.read<SimulasiCubit>().setSimulationInfo(false);
                             if (_selectedValues['tipeMotor'] !=
                                 DEFAULT_OPTION) {
                               setState(() {
@@ -262,6 +266,7 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
                     print("sukses simulasi 2");
                     ElevatedButton(
                       onPressed: () {
+                        
                         if (priceInInt != null &&
                             selectedUangMukaValue != null &&
                             selectedJangkaWaktuValue != null) {
@@ -308,9 +313,6 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
                             selectedUangMukaValue!,
                             selectedJangkaWaktuValue!);
                       } else {
-                        print("cek konsisi :$_selectedValues");
-                        print("cek konsisi :$_selectedVarian");
-                        print("cek konsisi :$priceInInt");
                         print('Harga tidak valid');
                       }
                     },
@@ -332,4 +334,19 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
       ),
     );
   }
+  Widget _buildShimmer() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        height: 56,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+    );
+  }
+
 }
+

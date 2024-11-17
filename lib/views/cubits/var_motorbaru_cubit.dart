@@ -22,6 +22,7 @@ class VarMotorBaruCubit extends Cubit<VarMotorBaruState> {
   VarMotorBaruCubit(this._varMotorBaruRepository) : super(VarMotorBaruInitial());
 
   Future<void> VarianMotorBaru(String category) async {
+    //emit(VarMotorBaruInitial());
     try {
       final varian = await _varMotorBaruRepository.varMotorbaru(category);
       final varianMotorBaruResp = VarianMotorBaruResp(varian: varian.varian, message: 'Data ditemukan');
