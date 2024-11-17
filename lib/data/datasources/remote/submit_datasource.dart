@@ -1,7 +1,7 @@
 
 import 'package:dio/dio.dart';
 
-import '../../models/submit_model.dart';
+import '../../models/simulation_model.dart';
 
 class SubmitDataSource {
   final Dio _dio;
@@ -16,7 +16,7 @@ class SubmitDataSource {
           ),
         );
 
-  Future<SubmitModel> submitSimulation(int price, int dp, int tenor) async {
+  Future<SimulationResp> submitSimulation(int price, int dp, int tenor) async {
     final payload = {
       "Price": price,
       "DP": dp,
@@ -27,7 +27,7 @@ class SubmitDataSource {
       final response = await _dio.post('/private/simulation', data: payload);
 
       if (response.statusCode == 200) {
-        return SubmitModel.fromJson(response.data);
+        return SimulationResp.fromJson(response.data);
       } else {
         throw Exception('Failed to load simulation data');
       }

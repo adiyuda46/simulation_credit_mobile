@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:simulation_credit/core/utils/colors/colors.dart';
+import 'package:simulation_credit/views/cubits/simulasi_cubit.dart';
 import 'package:simulation_credit/views/cubits/var_motorbaru_cubit.dart';
 import 'package:simulation_credit/views/widget/listProduct.dart';
 import 'package:simulation_credit/views/widget/dropDownProduct.dart';
 import 'package:simulation_credit/data/repositories/cat_motorbaru_repository.dart';
+import 'package:simulation_credit/views/widget/result_simulasai.dart';
 import '../cubits/cat_motorbaru_cubit.dart';
 import '../cubits/price_motorbaru_cubit.dart';
 import '../widget/listProductForm.dart';
@@ -28,11 +31,13 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
   List<String> _motorCategories = [];
   List<String> _motorVarian = [];
   String _motorPrice = ""; // Make this nullable to represent no price
-  String selectedJangkaWaktu = 'Silakan pilih'; // Inisialisasi dengan pilihan awal
+  String selectedJangkaWaktu =
+      'Silakan pilih'; // Inisialisasi dengan pilihan awal
   String selectedUangMuka = 'Silakan pilih';
   int? selectedUangMukaValue; // Untuk menyimpan nilai Uang Muka sebagai integer
   int?
       selectedJangkaWaktuValue; // Untuk menyimpan nilai Jangka Waktu sebagai integer
+  int? priceInInt;
 
   @override
   void initState() {
@@ -140,20 +145,33 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
                     ),
                     const SizedBox(height: 50),
                     BlocBuilder<PriceMotorBaruCubit, PriceMotorBaruState>(
-                      //key: Key( _selectedValues['tipeMotor']?? ""),
                       builder: (context, state) {
                         String displayedPrice =
-                            _motorPrice == "" ? "" : _motorPrice;
+                            _motorPrice.isEmpty ? "" : _motorPrice;
+                        String formattedPrice =
+                            ""; // Inisialisasi formattedPrice
+
                         if (state.error.isNotEmpty) {
                           return Center(child: Text('Error: ${state.error}'));
                         } else if (state.priceMotorBaruResp != null &&
                             _selectedVarian['varianMotor'] != DEFAULT_OPTION &&
-                            _motorPrice == "") {
+                            _motorPrice.isEmpty) {
                           displayedPrice = state.priceMotorBaruResp!
                               .price; // Mengambil harga dari response
-                          print("harga baru update :${displayedPrice}");
-                        } else {
-                          displayedPrice = "";
+                          print("harga baru update : $displayedPrice");
+
+                          // Mengonversi displayedPrice menjadi int
+                          priceInInt = int.tryParse(
+                              displayedPrice.replaceAll(RegExp(r'[^\d]'), ''));
+
+                          // Pastikan untuk memeriksa jika konversi berhasil
+                          if (priceInInt != null) {
+                            formattedPrice = NumberFormat('#,##0', 'id_ID')
+                                .format(priceInInt);
+                            print("duit : $priceInInt");
+                          } else {
+                            print("Gagal mengonversi harga: $displayedPrice");
+                          }
                         }
 
                         return Column(
@@ -169,7 +187,8 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
                             Container(
                               height: 50,
                               width: 300,
-                              key: Key("harga-${displayedPrice}"),
+                              key: Key(
+                                  "harga-${formattedPrice.isNotEmpty ? formattedPrice : '0'}"),
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                 border:
@@ -177,7 +196,9 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
-                                'Rp. ${displayedPrice}',
+                                formattedPrice.isNotEmpty
+                                    ? 'Rp. $formattedPrice'
+                                    : 'Rp. 0',
                                 style: TextStyle(fontSize: 16),
                               ),
                             ),
@@ -185,26 +206,22 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
                         );
                       },
                     ),
-                     const SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Row(
                       children: [
                         Expanded(
                           child: CustomDropdown(
                             label: 'Jangka Waktu',
                             value: selectedJangkaWaktu,
-                            items: [
-                              
-                              '12 bulan',
-                              '24 bulan',
-                              '36 bulan'
-                            ],
+                            items: ['12 bulan', '24 bulan', '36 bulan'],
                             onChanged: (value) {
                               setState(() {
                                 selectedJangkaWaktu = value ?? 'Silakan pilih';
                                 // Konversi string ke integer, abaikan 'Silakan pilih'
-                                selectedJangkaWaktuValue = value == 'Silakan pilih'
-                                    ? null
-                                    : int.parse(value!.split(' ')[0]);
+                                selectedJangkaWaktuValue =
+                                    value == 'Silakan pilih'
+                                        ? null
+                                        : int.parse(value!.split(' ')[0]);
                               });
                             },
                             enabled: true,
@@ -215,7 +232,7 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
                           child: CustomDropdown(
                             label: 'Uang Muka',
                             value: selectedUangMuka,
-                            items: [ '10%', '20%', '30%'],
+                            items: ['10%', '20%', '30%'],
                             onChanged: (value) {
                               setState(() {
                                 selectedUangMuka = value ?? 'Silakan pilih';
@@ -234,20 +251,81 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
                 ),
               ),
               const SizedBox(height: 26),
-              ElevatedButton(
-                onPressed: () {
-                  // Add logic to calculate installments
+              BlocBuilder<SimulasiCubit, SimulasiState>(
+                builder: (context, state) {
+                  if (state.error.isNotEmpty) {
+                    return Center(child: Text('Error: ${state.error}'));
+                  } else if (state.showSimulationInfo &&
+                      state.simulationResp != null &&
+                      _selectedVarian['varianMotor'] == 'Silakan pilih') {
+                    final response = state.simulationResp!;
+                    print("sukses simulasi 2");
+                    ElevatedButton(
+                      onPressed: () {
+                        if (priceInInt != null &&
+                            selectedUangMukaValue != null &&
+                            selectedJangkaWaktuValue != null) {
+                          context.read<SimulasiCubit>().simulasiKredit(
+                              priceInInt!,
+                              selectedUangMukaValue!,
+                              selectedJangkaWaktuValue!);
+                        } else {
+                          // Tampilkan pesan kesalahan atau lakukan penanganan lain
+                          print('Harga tidak valid');
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: ColorUtil.primaryColor,
+                        onPrimary: ColorUtil.putih,
+                        minimumSize: const Size(250, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: const Text('Hitung Cicilan'),
+                    );
+                  } else if (state.showSimulationInfo &&
+                      state.simulationResp != null) {
+                    final response = state.simulationResp!;
+                    print("sukses simulasi 1");
+                    print("cek konsisi :$_selectedValues");
+                    print("cek konsisi :$_selectedVarian");
+                    print("cek konsisi :$priceInInt");
+
+                    return ResultSimulasi(
+                      cicilanBulanan: response.cicilanBulanan,
+                      totalDownPayment: response.totalDownPayment,
+                    );
+                  }
+
+                  return ElevatedButton(
+                    onPressed: () {
+                      if (priceInInt != null &&
+                          selectedUangMukaValue != null &&
+                          selectedJangkaWaktuValue != null) {
+                        context.read<SimulasiCubit>().simulasiKredit(
+                            priceInInt!,
+                            selectedUangMukaValue!,
+                            selectedJangkaWaktuValue!);
+                      } else {
+                        print("cek konsisi :$_selectedValues");
+                        print("cek konsisi :$_selectedVarian");
+                        print("cek konsisi :$priceInInt");
+                        print('Harga tidak valid');
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: ColorUtil.primaryColor,
+                      onPrimary: ColorUtil.putih,
+                      minimumSize: const Size(250, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Text('Hitung Cicilan'),
+                  );
                 },
-                style: ElevatedButton.styleFrom(
-                  primary: ColorUtil.primaryColor,
-                  onPrimary: ColorUtil.putih,
-                  minimumSize: const Size(250, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: const Text('Hitung Cicilan'),
-              ),
+              )
             ],
           ),
         ),

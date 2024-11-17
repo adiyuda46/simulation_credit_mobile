@@ -9,16 +9,19 @@ import 'package:simulation_credit/data/datasources/remote/auth_datasource.dart';
 import 'package:simulation_credit/data/datasources/remote/cat_motorbaru_datasource.dart';
 import 'package:simulation_credit/data/datasources/remote/price_motorbaru_datasource.dart';
 import 'package:simulation_credit/data/datasources/remote/register_datasource.dart';
+import 'package:simulation_credit/data/datasources/remote/simulasi_datasource.dart';
 import 'package:simulation_credit/data/datasources/remote/var_motorbaru_datasource.dart';
 import 'package:simulation_credit/data/repositories/auth_repository.dart';
 import 'package:simulation_credit/data/repositories/cat_motorbaru_repository.dart';
 import 'package:simulation_credit/data/repositories/price_motorbaru_repository.dart';
 import 'package:simulation_credit/data/repositories/register_repository.dart';
+import 'package:simulation_credit/data/repositories/simulasi_repository.dart';
 import 'package:simulation_credit/data/repositories/var_motorbaru_repository.dart';
 import 'package:simulation_credit/views/cubits/cat_motorbaru_cubit.dart';
 import 'package:simulation_credit/views/cubits/login_cubit.dart';
 import 'package:simulation_credit/views/cubits/price_motorbaru_cubit.dart';
 import 'package:simulation_credit/views/cubits/register_cubit.dart';
+import 'package:simulation_credit/views/cubits/simulasi_cubit.dart';
 import 'package:simulation_credit/views/cubits/var_motorbaru_cubit.dart';
 import 'package:simulation_credit/views/screens/login_page.dart';
 import 'package:simulation_credit/views/screens/register_page.dart';
@@ -34,6 +37,7 @@ void setup() {
   getIt.registerLazySingleton<CatMotorbaruDataSource>(() => CatMotorbaruDataSource());
   getIt.registerLazySingleton<VarMotorBaruDataSource>(() => VarMotorBaruDataSource());
   getIt.registerLazySingleton<PriceMotorBaruDataSource>(() => PriceMotorBaruDataSource());
+  getIt.registerLazySingleton<SimulationDataSource>(() => SimulationDataSource());
 
   // Register repositories
   getIt.registerLazySingleton<AuthRepository>(() => AuthRepository(
@@ -60,12 +64,18 @@ void setup() {
     getIt<SessionManager>(),
     ));
 
+  getIt.registerLazySingleton<SimulationRepository>(() => SimulationRepository(
+    getIt<SimulationDataSource>(),
+    getIt<SessionManager>(),
+  ),);
+
   // Register cubits
   getIt.registerFactory(() => AuthCubit(getIt<AuthRepository>()));
   getIt.registerFactory(() => RegisterCubit(getIt<RegisterRepository>()));
   getIt.registerFactory(() => CatMotorBaruCubit(getIt<CatMotorBaruRepository>()));
   getIt.registerFactory(() => VarMotorBaruCubit(getIt<VarMotorBaruRepository>()));
   getIt.registerFactory(() => PriceMotorBaruCubit(getIt<PriceMotorBaruRepository>()));
+  getIt.registerFactory(() => SimulasiCubit(getIt<SimulationRepository>()));
 }
 
 void main() {

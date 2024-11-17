@@ -1,11 +1,11 @@
-class SubmitModel {
+class SimulationResp {
   final String cicilanBulanan;
   final String totalBunga;
   final String totalDownPayment;
   final String totalPembayaran;
   final String message;
 
-  SubmitModel({
+  SimulationResp({
     required this.cicilanBulanan,
     required this.totalBunga,
     required this.totalDownPayment,
@@ -13,9 +13,9 @@ class SubmitModel {
     required this.message,
   });
 
-  factory SubmitModel.fromJson(Map<String, dynamic> json) {
+  factory SimulationResp.fromJson(Map<String, dynamic> json) {
     final data = json['data'];
-    return SubmitModel(
+    return SimulationResp(
       cicilanBulanan: data['Cicilan Bulanan'],
       totalBunga: data['Total Bunga'],
       totalDownPayment: data['Total Down Payment'],
