@@ -4,11 +4,13 @@ import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:simulation_credit/core/utils/colors/colors.dart';
 import 'package:simulation_credit/views/cubits/simulasi_cubit.dart';
+import 'package:simulation_credit/views/cubits/submit_cubit.dart';
 import 'package:simulation_credit/views/cubits/var_motorbaru_cubit.dart';
 import 'package:simulation_credit/views/widget/listProduct.dart';
 import 'package:simulation_credit/views/widget/dropDownProduct.dart';
 import 'package:simulation_credit/data/repositories/cat_motorbaru_repository.dart';
 import 'package:simulation_credit/views/widget/result_simulasai.dart';
+import '../../core/injection/injection.dart';
 import '../cubits/cat_motorbaru_cubit.dart';
 import '../cubits/price_motorbaru_cubit.dart';
 import '../widget/listProductForm.dart';
@@ -39,6 +41,7 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
   int?
       selectedJangkaWaktuValue; // Untuk menyimpan nilai Jangka Waktu sebagai integer
   int? priceInInt;
+  String? typeProduct;
 
   @override
   void initState() {
@@ -75,7 +78,6 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
                         if (state is CatMotorBaruInitial) {
                           //return Center(child: CircularProgressIndicator());
                           return _buildShimmer();
-                          
                         } else if (state.error != null) {
                           return Center(child: Text('Error: ${state.error}'));
                         } else if (state.categoryMotorBaruResp != null) {
@@ -95,6 +97,7 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
                                 _motorPrice =
                                     ""; // Reset price saat tipe motor diubah
                                 if (value != DEFAULT_OPTION) {
+                                  typeProduct = value;
                                   context
                                       .read<VarMotorBaruCubit>()
                                       .VarianMotorBaru(value);
@@ -112,7 +115,7 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
                     const SizedBox(height: 20),
                     BlocBuilder<VarMotorBaruCubit, VarMotorBaruState>(
                       builder: (context, state) {
-                         if (state.error != null) {
+                        if (state.error != null) {
                           return Center(child: Text('Error: ${state.error}'));
                         } else if (state.varianMotorBaruResp != null) {
                           _motorVarian = state.varianMotorBaruResp!.varian;
@@ -122,7 +125,9 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
                           value: _selectedVarian['varianMotor']!,
                           items: _motorVarian,
                           onChanged: (value) {
-                            context.read<SimulasiCubit>().setSimulationInfo(false);
+                            context
+                                .read<SimulasiCubit>()
+                                .setSimulationInfo(false);
                             if (_selectedValues['tipeMotor'] !=
                                 DEFAULT_OPTION) {
                               setState(() {
@@ -266,7 +271,6 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
                     print("sukses simulasi 2");
                     ElevatedButton(
                       onPressed: () {
-                        
                         if (priceInInt != null &&
                             selectedUangMukaValue != null &&
                             selectedJangkaWaktuValue != null) {
@@ -292,14 +296,13 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
                   } else if (state.showSimulationInfo &&
                       state.simulationResp != null) {
                     final response = state.simulationResp!;
-                    print("sukses simulasi 1");
-                    print("cek konsisi :$_selectedValues");
-                    print("cek konsisi :$_selectedVarian");
-                    print("cek konsisi :$priceInInt");
-
                     return ResultSimulasi(
                       cicilanBulanan: response.cicilanBulanan,
                       totalDownPayment: response.totalDownPayment,
+                      dp: selectedUangMuka,
+                      tenor: selectedJangkaWaktu,
+                      typeProduct: typeProduct!,
+                      totalAmount: response.totalPembayaran,
                     );
                   }
 
@@ -334,6 +337,7 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
       ),
     );
   }
+
   Widget _buildShimmer() {
     return Shimmer.fromColors(
       baseColor: Colors.grey[300]!,
@@ -347,6 +351,4 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
       ),
     );
   }
-
 }
-

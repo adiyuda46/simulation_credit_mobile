@@ -24,3 +24,16 @@ class SimulationResp {
     );
   }
 }
+
+class SubmitSimulationResp {
+final String Agrement;
+ final String message;
+
+  SubmitSimulationResp({required this.Agrement, required this.message});
+
+ factory SubmitSimulationResp.fromJson(Map<String, dynamic> json) {
+  final data = json['data'];
+  return SubmitSimulationResp(Agrement: data['AgreementNumber'], message: data['Message']);
+ }
+
+}

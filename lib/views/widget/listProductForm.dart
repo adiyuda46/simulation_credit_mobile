@@ -3,9 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:simulation_credit/main.dart';
 import 'package:simulation_credit/views/cubits/cat_motorbaru_cubit.dart';
 import 'package:simulation_credit/views/cubits/price_motorbaru_cubit.dart';
+import 'package:simulation_credit/views/cubits/submit_cubit.dart';
 import 'package:simulation_credit/views/cubits/var_motorbaru_cubit.dart';
 import 'package:simulation_credit/views/screens/motorBaru_page.dart';
 import 'package:simulation_credit/views/screens/testingPage.dart';
+
+import '../cubits/simulasi_cubit.dart';
 
 class ListProductForm extends StatefulWidget {
   final String currentPage; // Tambahkan parameter untuk halaman saat ini
@@ -35,6 +38,7 @@ class _ListProductFormState extends State<ListProductForm> {
                         BlocProvider(create: (context) => getIt<CatMotorBaruCubit>()),
                         BlocProvider(create: (context) => getIt<VarMotorBaruCubit>()),
                         BlocProvider(create: (context) => getIt<PriceMotorBaruCubit>()),
+                        BlocProvider(create: (context) => getIt<SubmitSimulationCubit>()),
                       ],
                       child: MotorBaruPage(),
                     ),
@@ -60,6 +64,8 @@ class _ListProductFormState extends State<ListProductForm> {
                         BlocProvider(create: (context) => getIt<CatMotorBaruCubit>()),
                         BlocProvider(create: (context) => getIt<VarMotorBaruCubit>()),
                         BlocProvider(create: (context) => getIt<PriceMotorBaruCubit>()),
+                        BlocProvider(create: (context) => getIt<SimulasiCubit>()),
+                        BlocProvider(create: (context) => getIt<SubmitSimulationCubit>()),
                       ],
                       child: MotorBaruPage(),
                     ),

@@ -40,6 +40,7 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 65),
+              // list agrment
               InformasiCicilanWidget(),
               const SizedBox(height: 65),
               // product

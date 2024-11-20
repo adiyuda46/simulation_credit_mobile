@@ -1,8 +1,8 @@
-
 import 'package:dio/dio.dart';
+import 'package:injectable/injectable.dart';
+import 'package:simulation_credit/data/models/simulation_model.dart';
 
-import '../../models/simulation_model.dart';
-
+@injectable
 class SubmitDataSource {
   final Dio _dio;
 
@@ -10,29 +10,53 @@ class SubmitDataSource {
       : _dio = Dio(
           BaseOptions(
             baseUrl: 'http://192.168.7.236:8080/api/v1',
-            connectTimeout: Duration(seconds: 5),
-            receiveTimeout: Duration(seconds: 5),
+            connectTimeout: const Duration(seconds: 5),
+            receiveTimeout: const Duration(seconds: 5),
             headers: {'Content-Type': 'application/json'},
           ),
         );
 
-  Future<SimulationResp> submitSimulation(int price, int dp, int tenor) async {
-    final payload = {
-      "Price": price,
-      "DP": dp,
-      "Tenor": tenor,
-    };
-
+  Future<SubmitSimulationResp> submitSimulation(
+      String token,
+      String amountInstalment,
+      String typeProduct,
+      String instalment,
+      String totalAmount) async {
+    // Validasi input dapat ditambahkan di sini jika perlu
+if (amountInstalment.isEmpty || typeProduct.isEmpty || instalment.isEmpty || totalAmount.isEmpty) {
+      throw Exception('All fields are required.');
+    }
     try {
-      final response = await _dio.post('/private/simulation', data: payload);
+      final response = await _dio.post(
+        '/private/submit/pengajuan',
+        data: {
+          'AmountInstalment': amountInstalment,
+          'TypeProduct': typeProduct,
+          'Instalment': instalment,
+          'TotalAmount': totalAmount,
+        },
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
 
       if (response.statusCode == 200) {
-        return SimulationResp.fromJson(response.data);
+        if (response.data['status'] == 'success') {
+          return SubmitSimulationResp.fromJson(response.data);
+        } else {
+          throw Exception('Failed to simulate: ${response.data['message']}');
+        }
       } else {
-        throw Exception('Failed to load simulation data');
+        throw Exception('Failed to load simulation. Status code: ${response.statusCode}');
       }
-    } on DioError catch (e) {
-      throw Exception('Error: ${e.response?.data}');
+    } on DioException catch (e) {
+      print("Dio error: ${e.message}");
+      throw Exception('Failed to load simulation: ${e.message}');
+    } catch (e) {
+      print("Unexpected error: $e");
+      throw Exception('An unexpected error occurred. Please try again later.');
     }
   }
 }
