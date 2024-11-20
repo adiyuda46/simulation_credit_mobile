@@ -27,6 +27,8 @@ class ResultSimulasi extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("type product");
+    print(typeProduct);
 
     return BlocProvider(
       create: (context) => getIt<SubmitSimulationCubit>(),
@@ -84,6 +86,7 @@ class ResultSimulasi extends StatelessWidget {
                       style: TextStyle(fontSize: 14),
                     ),
                     const SizedBox(height: 10),
+                    
                     ElevatedButton(
                       onPressed: () {
                         context.read<SubmitSimulationCubit>().submitSimulasi(

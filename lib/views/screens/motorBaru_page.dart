@@ -41,7 +41,7 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
   int?
       selectedJangkaWaktuValue; // Untuk menyimpan nilai Jangka Waktu sebagai integer
   int? priceInInt;
-  String? typeProduct;
+  String typeProduct = "MOTOR BARU";
 
   @override
   void initState() {
@@ -301,7 +301,7 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
                       totalDownPayment: response.totalDownPayment,
                       dp: selectedUangMuka,
                       tenor: selectedJangkaWaktu,
-                      typeProduct: typeProduct!,
+                      typeProduct: "MOTOR BARU",
                       totalAmount: response.totalPembayaran,
                     );
                   }

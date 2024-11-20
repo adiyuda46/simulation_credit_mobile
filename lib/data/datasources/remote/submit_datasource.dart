@@ -23,10 +23,15 @@ class SubmitDataSource {
       String instalment,
       String totalAmount) async {
     // Validasi input dapat ditambahkan di sini jika perlu
-if (amountInstalment.isEmpty || typeProduct.isEmpty || instalment.isEmpty || totalAmount.isEmpty) {
-      throw Exception('All fields are required.');
-    }
+// if (amountInstalment.isEmpty || typeProduct.isEmpty || instalment.isEmpty || totalAmount.isEmpty) {
+//       throw Exception('All fields are required.');
+//     }
     try {
+      print("=====");
+      print(amountInstalment);
+      print(typeProduct);
+      print(instalment);
+      print(totalAmount);
       final response = await _dio.post(
         '/private/submit/pengajuan',
         data: {
@@ -44,12 +49,16 @@ if (amountInstalment.isEmpty || typeProduct.isEmpty || instalment.isEmpty || tot
 
       if (response.statusCode == 200) {
         if (response.data['status'] == 'success') {
+          print("=======");
+          print(response.data);
           return SubmitSimulationResp.fromJson(response.data);
         } else {
           throw Exception('Failed to simulate: ${response.data['message']}');
         }
       } else {
-        throw Exception('Failed to load simulation. Status code: ${response.statusCode}');
+        print("eror submit simulasi ");
+        throw Exception(
+            'Failed to load simulation. Status code: ${response.statusCode}');
       }
     } on DioException catch (e) {
       print("Dio error: ${e.message}");
