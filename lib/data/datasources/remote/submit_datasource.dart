@@ -9,7 +9,7 @@ class SubmitDataSource {
   SubmitDataSource()
       : _dio = Dio(
           BaseOptions(
-            baseUrl: 'http://192.168.7.236:8080/api/v1',
+            baseUrl: 'http://192.168.102.236:8080/api/v1',
             connectTimeout: const Duration(seconds: 5),
             receiveTimeout: const Duration(seconds: 5),
             headers: {'Content-Type': 'application/json'},

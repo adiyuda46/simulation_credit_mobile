@@ -28,7 +28,15 @@ class AuthCubit extends Cubit<AuthState> {
       final user = await _authRepository.login(phone, password);
       emit(AuthState(status: AuthStatus.authenticated, user: user));
     } catch (e) {
-      emit(AuthState(status: AuthStatus.unauthenticated, error: e.toString()));
+       String errorMessage;
+
+    if (e.toString().contains("401")) {
+      errorMessage = "Login gagal: nomor handphone atau password salah.";
+    } else {
+      errorMessage = "Terjadi kesalahan: ${e.toString()}";
+    }
+
+    emit(AuthState(status: AuthStatus.unauthenticated, error: errorMessage));
     }
   }
 }

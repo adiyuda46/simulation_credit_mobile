@@ -43,19 +43,19 @@ class _ProductPageState extends State<ProductPage> {
           ),
           const SizedBox(height: 30),
           DropdownSection(),
-          ElevatedButton(
-                      onPressed: () {
-                      },
-                      style: ElevatedButton.styleFrom(
-                        primary: ColorUtil.primaryColor,
-                        onPrimary: ColorUtil.putih,
-                        minimumSize: const Size(250, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: const Text('Ajukan Sekarang'),
-                    ),
+          // ElevatedButton(
+          //             onPressed: () {
+          //             },
+          //             style: ElevatedButton.styleFrom(
+          //               primary: ColorUtil.primaryColor,
+          //               onPrimary: ColorUtil.putih,
+          //               minimumSize: const Size(250, 50),
+          //               shape: RoundedRectangleBorder(
+          //                 borderRadius: BorderRadius.circular(10),
+          //               ),
+          //             ),
+          //             child: const Text('Ajukan Sekarang'),
+          //           ),
           const SizedBox(height: 5),
           NavigatePage()
         ],
