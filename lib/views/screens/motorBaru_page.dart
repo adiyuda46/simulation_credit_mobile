@@ -6,6 +6,7 @@ import 'package:simulation_credit/core/utils/colors/colors.dart';
 import 'package:simulation_credit/views/cubits/simulasi_cubit.dart';
 import 'package:simulation_credit/views/cubits/submit_cubit.dart';
 import 'package:simulation_credit/views/cubits/var_motorbaru_cubit.dart';
+import 'package:simulation_credit/views/screens/product.dart';
 import 'package:simulation_credit/views/widget/listProduct.dart';
 import 'package:simulation_credit/views/widget/dropDownProduct.dart';
 import 'package:simulation_credit/data/repositories/cat_motorbaru_repository.dart';
@@ -59,6 +60,15 @@ class _MotorBaruPageState extends State<MotorBaruPage> {
         ),
         centerTitle: true,
         backgroundColor: ColorUtil.primaryColor,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: ColorUtil.putih), // Back button icon
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProductPage()), // Navigate to ProductPage
+            );
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(

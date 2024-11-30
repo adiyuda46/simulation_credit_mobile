@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:simulation_credit/core/utils/colors/colors.dart';
+import 'package:simulation_credit/views/screens/home_page.dart';
 import 'package:simulation_credit/views/widget/dropDwon.dart';
 import 'package:simulation_credit/views/widget/listProduct.dart';
 import 'package:simulation_credit/views/widget/navigate.dart';
@@ -19,7 +20,10 @@ class _ProductPageState extends State<ProductPage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                  builder: (context) => HomePage()), // Navigate to HomePage
+            );
           },
         ),
         centerTitle: true,
@@ -38,24 +42,19 @@ class _ProductPageState extends State<ProductPage> {
             child: Container(
               height: 140,
               width: double.infinity,
-              color: Colors.blueAccent,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(
+                      'assets/images/banner3.png'), // Add your image here
+                  fit: BoxFit.cover, // Adjust the image to cover the container
+                ),
+                borderRadius:
+                    BorderRadius.circular(8.0), // Optional: Add rounded corners
+              ),
             ),
           ),
           const SizedBox(height: 30),
           DropdownSection(),
-          // ElevatedButton(
-          //             onPressed: () {
-          //             },
-          //             style: ElevatedButton.styleFrom(
-          //               primary: ColorUtil.primaryColor,
-          //               onPrimary: ColorUtil.putih,
-          //               minimumSize: const Size(250, 50),
-          //               shape: RoundedRectangleBorder(
-          //                 borderRadius: BorderRadius.circular(10),
-          //               ),
-          //             ),
-          //             child: const Text('Ajukan Sekarang'),
-          //           ),
           const SizedBox(height: 5),
           NavigatePage()
         ],

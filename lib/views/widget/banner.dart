@@ -8,10 +8,11 @@ class BannerImage extends StatefulWidget {
 }
 
 class _BannerImageState extends State<BannerImage> {
-  final List<String> ListImage = [
-    'assets/images/mp.jpg',
-    'assets/images/mobil.jpg',
-    'assets/images/motor.png'
+  final List<String> listImage = [
+   // 'assets/images/banner1.png',
+    'assets/images/banner4.png', 
+    'assets/images/banner5.png',  // Added new image
+    'assets/images/banner3.png'  // Added new image
   ];
 
   @override
@@ -21,25 +22,21 @@ class _BannerImageState extends State<BannerImage> {
       child: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Container(
+          children: listImage.map((imagePath) {
+            return Container(
               height: 150,
               width: 250,
-              color: Colors.amber,
-            ),
-            SizedBox(width: 16.0), // Add 16 pixel spacing
-            Container(
-              height: 150,
-              width: 250,
-              color: Colors.blueAccent,
-            ),
-            SizedBox(width: 16.0), // Add 16 pixel spacing
-            Container(
-              height: 150,
-              width: 250,
-              color: Colors.black,
-            ),
-          ],
+              margin: const EdgeInsets.symmetric(horizontal: 8.0), // Add horizontal margin
+              decoration: BoxDecoration(
+                //color: Colors.amber, // Background color in case the image doesn't load
+                image: DecorationImage(
+                  image: AssetImage(imagePath),
+                  fit: BoxFit.fill, // Use BoxFit.cover to maintain aspect ratio
+                ),
+                borderRadius: BorderRadius.circular(8.0), // Optional: Add rounded corners
+              ),
+            );
+          }).toList(),
         ),
       ),
     );
