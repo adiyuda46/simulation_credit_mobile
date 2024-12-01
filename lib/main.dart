@@ -45,11 +45,20 @@ import 'package:simulation_credit/views/cubits/var_motorbaru_cubit.dart';
 import 'package:simulation_credit/views/screens/login_page.dart';
 import 'package:simulation_credit/views/screens/register_page.dart';
 
+import 'data/datasources/remote/cat_motorBekas_datasource.dart';
+import 'data/datasources/remote/price_motorBekas_datasource.dart';
 import 'data/datasources/remote/var_mobil_datasource.dart';
+import 'data/datasources/remote/var_motorBekas_datasource.dart';
 import 'data/repositories/cat_mobil_repository.dart';
+import 'data/repositories/cat_motorBekas_repository.dart';
+import 'data/repositories/price_motorBekas_repository.dart';
 import 'data/repositories/var_mobil_repository.dart';
+import 'data/repositories/var_motorBekas_repository.dart';
+import 'views/cubits/cat_morotBekas_cubit.dart';
 import 'views/cubits/cat_mp_cubit.dart';
+import 'views/cubits/price_motorBekas_cubit.dart';
 import 'views/cubits/var_mobil_cubit.dart';
+import 'views/cubits/var_motorBekas_cubit.dart';
 import 'views/cubits/var_mp_cubit.dart';
 
 final GetIt getIt = GetIt.instance;
@@ -72,6 +81,9 @@ void setup() {
   getIt.registerLazySingleton<CatMpDataSource>(() => CatMpDataSource());
   getIt.registerLazySingleton<VarMpDataSource>(() => VarMpDataSource());
   getIt.registerLazySingleton<PriceMpDataSource>(() => PriceMpDataSource());
+  getIt.registerLazySingleton<CatMotorbekasDataSource>(() => CatMotorbekasDataSource());
+  getIt.registerLazySingleton<VarMotorBekasDataSource>(() => VarMotorBekasDataSource());
+  getIt.registerLazySingleton<PriceMotorBekasDataSource>(() => PriceMotorBekasDataSource());
   // Register repositories
   getIt.registerLazySingleton<AuthRepository>(() => AuthRepository(
     getIt<SessionManager>(),
@@ -134,6 +146,19 @@ getIt.registerLazySingleton<CatMpRepository>(() => CatMpRepository(
     getIt<PriceMpDataSource>(),
     getIt<SessionManager>(),
     ));
+     getIt.registerLazySingleton<CatMotorBekasRepository>(() => CatMotorBekasRepository(
+    getIt<CatMotorbekasDataSource>(),
+    getIt<SessionManager>(),
+  ));
+
+  getIt.registerLazySingleton<VarMotorBekasRepository>(() => VarMotorBekasRepository(
+    getIt<VarMotorBekasDataSource>(),
+     getIt<SessionManager>(),
+  ));
+  getIt.registerLazySingleton<PriceMotorBekasRepository>(() => PriceMotorBekasRepository(
+    getIt<PriceMotorBekasDataSource>(),
+    getIt<SessionManager>(),
+    ));
 
   // Register cubits
   getIt.registerFactory(() => AuthCubit(getIt<AuthRepository>()));
@@ -150,6 +175,9 @@ getIt.registerLazySingleton<CatMpRepository>(() => CatMpRepository(
  getIt.registerFactory(() => CatMpCubit(getIt<CatMpRepository>()));
  getIt.registerFactory(() => VarMpCubit(getIt<VarMpRepository>()));
  getIt.registerFactory(() => PriceMpCubit(getIt<PriceMpRepository>()));
+   getIt.registerFactory(() => CatMotorBekasCubit(getIt<CatMotorBekasRepository>()));
+  getIt.registerFactory(() => VarMotorBekasCubit(getIt<VarMotorBekasRepository>()));
+  getIt.registerFactory(() => PriceMotorBekasCubit(getIt<PriceMotorBekasRepository>()));
 }
 
 void main() {
@@ -172,15 +200,15 @@ class MyApp extends StatelessWidget {
           BlocProvider<RegisterCubit>(
             create: (context) => getIt<RegisterCubit>(),
           ),
-          BlocProvider<CatMotorBaruCubit>(
-            create: (context) => getIt<CatMotorBaruCubit>(),
-          ),
-          BlocProvider(
-            create: (context) => getIt<VarMotorBaruCubit>(),
-          ),
-          BlocProvider(
-            create: (context) => getIt<PriceMotorBaruCubit>(),
-          ),
+          // BlocProvider<CatMotorBaruCubit>(
+          //   create: (context) => getIt<CatMotorBaruCubit>(),
+          // ),
+          // BlocProvider(
+          //   create: (context) => getIt<VarMotorBaruCubit>(),
+          // ),
+          // BlocProvider(
+          //   create: (context) => getIt<PriceMotorBaruCubit>(),
+          //),
           BlocProvider(
             create: (context) => getIt<SimulasiCubit>(),
           ),

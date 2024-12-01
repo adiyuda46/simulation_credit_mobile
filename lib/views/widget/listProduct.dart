@@ -12,9 +12,13 @@ import 'package:simulation_credit/views/screens/motorBaru_page.dart';
 import 'package:simulation_credit/views/screens/testingPage.dart';
 
 import '../cubits/cat_mobil_cubit.dart';
+import '../cubits/cat_morotBekas_cubit.dart';
+import '../cubits/price_motorBekas_cubit.dart';
 import '../cubits/price_mp_cubit.dart';
 import '../cubits/var_mobil_cubit.dart';
+import '../cubits/var_motorBekas_cubit.dart';
 import '../cubits/var_mp_cubit.dart';
+import '../screens/motorBekas_page.dart';
 import '../screens/multyproduct_page.dart';
 
 class ListProduct extends StatefulWidget {
@@ -116,6 +120,7 @@ class _ListProductState extends State<ListProduct> {
                   ),
                 );
               },
+              //motor bekas
               child: Container(
                 height: 120,
                 width: 120,
@@ -125,12 +130,34 @@ class _ListProductState extends State<ListProduct> {
               ),
             ),
             // motor bekas
-            Container(
-              height: 120,
-              width: 120,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('assets/images/motor.png'))),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MultiBlocProvider(
+                      providers: [
+                        BlocProvider(
+                            create: (context) => getIt<CatMotorBekasCubit>()),
+                        BlocProvider(
+                            create: (context) => getIt<VarMotorBekasCubit>()),
+                        BlocProvider(
+                            create: (context) => getIt<PriceMotorBekasCubit>()),
+                        BlocProvider(
+                            create: (context) => getIt<SimulasiCubit>()),
+                      ],
+                      child: MotorBekasPage(),
+                    ),
+                  ),
+                );
+              },
+              child: Container(
+                height: 120,
+                width: 120,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage('assets/images/motor.png'))),
+              ),
             ),
           ],
         ),

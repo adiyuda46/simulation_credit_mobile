@@ -12,11 +12,15 @@ import 'package:simulation_credit/views/screens/multyproduct_page.dart';
 import 'package:simulation_credit/views/screens/testingPage.dart';
 
 import '../cubits/cat_mobil_cubit.dart';
+import '../cubits/cat_morotBekas_cubit.dart';
+import '../cubits/price_motorBekas_cubit.dart';
 import '../cubits/price_mp_cubit.dart';
 import '../cubits/simulasi_cubit.dart';
 import '../cubits/var_mobil_cubit.dart';
+import '../cubits/var_motorBekas_cubit.dart';
 import '../cubits/var_mp_cubit.dart';
 import '../screens/mobil_page.dart';
+import '../screens/motorBekas_page.dart';
 
 class ListProductForm extends StatefulWidget {
   final String currentPage; // Tambahkan parameter untuk halaman saat ini
@@ -149,10 +153,34 @@ class _ListProductFormState extends State<ListProductForm> {
               ),
             ),
             GestureDetector(
-              onTap: widget.currentPage == 'motorBaru'
+              onTap: widget.currentPage == 'motorBekas'
                   ? null
                   : () {
                       // Navigasi ke halaman lain
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MultiBlocProvider(
+                            providers: [
+                              BlocProvider(
+                                  create: (context) =>
+                                      getIt<CatMotorBekasCubit>()),
+                              BlocProvider(
+                                  create: (context) =>
+                                      getIt<VarMotorBekasCubit>()),
+                              BlocProvider(
+                                  create: (context) =>
+                                      getIt<PriceMotorBekasCubit>()),
+                              BlocProvider(
+                                  create: (context) => getIt<SimulasiCubit>()),
+                              // BlocProvider(
+                              //     create: (context) =>
+                              //         getIt<SubmitSimulationCubit>()),
+                            ],
+                            child: MotorBekasPage(),
+                          ),
+                        ),
+                      );
                     },
               child: Container(
                 height: 120,
