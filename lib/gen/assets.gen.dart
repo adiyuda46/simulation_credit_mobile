@@ -19,6 +19,21 @@ class $AssetsImagesGen {
   AssetGenImage get bafmobile =>
       const AssetGenImage('assets/images/bafmobile.png');
 
+  /// File path: assets/images/banner1.png
+  AssetGenImage get banner1 => const AssetGenImage('assets/images/banner1.png');
+
+  /// File path: assets/images/banner2.png
+  AssetGenImage get banner2 => const AssetGenImage('assets/images/banner2.png');
+
+  /// File path: assets/images/banner3.png
+  AssetGenImage get banner3 => const AssetGenImage('assets/images/banner3.png');
+
+  /// File path: assets/images/banner4.png
+  AssetGenImage get banner4 => const AssetGenImage('assets/images/banner4.png');
+
+  /// File path: assets/images/banner5.png
+  AssetGenImage get banner5 => const AssetGenImage('assets/images/banner5.png');
+
   /// File path: assets/images/lock.png
   AssetGenImage get lock => const AssetGenImage('assets/images/lock.png');
 
@@ -38,8 +53,21 @@ class $AssetsImagesGen {
   AssetGenImage get ojk => const AssetGenImage('assets/images/ojk.png');
 
   /// List of all assets
-  List<AssetGenImage> get values =>
-      [phone, bafmobile, lock, logobaf, mobil, motor, mp, ojk];
+  List<AssetGenImage> get values => [
+        phone,
+        bafmobile,
+        banner1,
+        banner2,
+        banner3,
+        banner4,
+        banner5,
+        lock,
+        logobaf,
+        mobil,
+        motor,
+        mp,
+        ojk
+      ];
 }
 
 class Assets {
