@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart';
 import 'package:simulation_credit/core/injection/injection.dart';
 import 'package:simulation_credit/data/datasources/local/shared_preferences_datasource.dart';
+import 'package:simulation_credit/data/datasources/remote/accountDetail_datasource.dart';
 import 'package:simulation_credit/data/datasources/remote/agrement_datasource.dart';
 import 'package:simulation_credit/data/datasources/remote/auth_datasource.dart';
 import 'package:simulation_credit/data/datasources/remote/cat_mobil_datasource.dart';
@@ -19,6 +20,7 @@ import 'package:simulation_credit/data/datasources/remote/submit_datasource.dart
 import 'package:simulation_credit/data/datasources/remote/var_motorbaru_datasource.dart';
 import 'package:simulation_credit/data/datasources/remote/var_mp_datasource.dart';
 import 'package:simulation_credit/data/models/simulation_model.dart';
+import 'package:simulation_credit/data/repositories/accountDetail_repository.dart';
 import 'package:simulation_credit/data/repositories/agrment_repository.dart';
 import 'package:simulation_credit/data/repositories/auth_repository.dart';
 import 'package:simulation_credit/data/repositories/cat_motorbaru_repository.dart';
@@ -54,6 +56,7 @@ import 'data/repositories/cat_motorBekas_repository.dart';
 import 'data/repositories/price_motorBekas_repository.dart';
 import 'data/repositories/var_mobil_repository.dart';
 import 'data/repositories/var_motorBekas_repository.dart';
+import 'views/cubits/accountDetails_cubit.dart';
 import 'views/cubits/cat_morotBekas_cubit.dart';
 import 'views/cubits/cat_mp_cubit.dart';
 import 'views/cubits/price_motorBekas_cubit.dart';
@@ -84,6 +87,7 @@ void setup() {
   getIt.registerLazySingleton<CatMotorbekasDataSource>(() => CatMotorbekasDataSource());
   getIt.registerLazySingleton<VarMotorBekasDataSource>(() => VarMotorBekasDataSource());
   getIt.registerLazySingleton<PriceMotorBekasDataSource>(() => PriceMotorBekasDataSource());
+  getIt.registerLazySingleton<AccountDetailsDatasource>(() => AccountDetailsDatasource());
   // Register repositories
   getIt.registerLazySingleton<AuthRepository>(() => AuthRepository(
     getIt<SessionManager>(),
@@ -159,6 +163,10 @@ getIt.registerLazySingleton<CatMpRepository>(() => CatMpRepository(
     getIt<PriceMotorBekasDataSource>(),
     getIt<SessionManager>(),
     ));
+    getIt.registerLazySingleton<AccountDetailRepository>(() => AccountDetailRepository(
+    getIt<AccountDetailsDatasource>(),
+    getIt<SessionManager>(),
+    ));
 
   // Register cubits
   getIt.registerFactory(() => AuthCubit(getIt<AuthRepository>()));
@@ -178,6 +186,7 @@ getIt.registerLazySingleton<CatMpRepository>(() => CatMpRepository(
    getIt.registerFactory(() => CatMotorBekasCubit(getIt<CatMotorBekasRepository>()));
   getIt.registerFactory(() => VarMotorBekasCubit(getIt<VarMotorBekasRepository>()));
   getIt.registerFactory(() => PriceMotorBekasCubit(getIt<PriceMotorBekasRepository>()));
+   getIt.registerFactory(() => AccountDetailCubit(getIt<AccountDetailRepository>()));
 }
 
 void main() {

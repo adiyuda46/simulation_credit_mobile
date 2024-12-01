@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:simulation_credit/core/utils/colors/colors.dart';
+import 'package:simulation_credit/main.dart';
+import 'package:simulation_credit/views/cubits/accountDetails_cubit.dart';
 import 'package:simulation_credit/views/screens/home_page.dart';
+import 'package:simulation_credit/views/screens/profil_page.dart';
 
 import '../screens/product.dart';
 
@@ -52,7 +56,16 @@ class _NavigatePageState extends State<NavigatePage> {
                 size: 35, color: ColorUtil.primaryColor),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                          create: (context) => getIt<AccountDetailCubit>(),
+                          child: ProfilPage(),
+                        )),
+              );
+            },
             icon: Icon(Icons.person, size: 35, color: ColorUtil.primaryColor),
           ),
         ],
