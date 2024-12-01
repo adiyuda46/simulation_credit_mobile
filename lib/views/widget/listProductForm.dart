@@ -2,16 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:simulation_credit/main.dart';
 import 'package:simulation_credit/views/cubits/cat_motorbaru_cubit.dart';
+import 'package:simulation_credit/views/cubits/cat_mp_cubit.dart';
 import 'package:simulation_credit/views/cubits/price_mobil_cubit.dart';
 import 'package:simulation_credit/views/cubits/price_motorbaru_cubit.dart';
 import 'package:simulation_credit/views/cubits/submit_cubit.dart';
 import 'package:simulation_credit/views/cubits/var_motorbaru_cubit.dart';
 import 'package:simulation_credit/views/screens/motorBaru_page.dart';
+import 'package:simulation_credit/views/screens/multyproduct_page.dart';
 import 'package:simulation_credit/views/screens/testingPage.dart';
 
 import '../cubits/cat_mobil_cubit.dart';
+import '../cubits/price_mp_cubit.dart';
 import '../cubits/simulasi_cubit.dart';
 import '../cubits/var_mobil_cubit.dart';
+import '../cubits/var_mp_cubit.dart';
 import '../screens/mobil_page.dart';
 
 class ListProductForm extends StatefulWidget {
@@ -117,20 +121,20 @@ class _ListProductFormState extends State<ListProductForm> {
                             providers: [
                               BlocProvider(
                                   create: (context) =>
-                                      getIt<CatMotorBaruCubit>()),
+                                      getIt<CatMpCubit>()),
                               BlocProvider(
                                   create: (context) =>
-                                      getIt<VarMotorBaruCubit>()),
+                                      getIt<VarMpCubit>()),
                               BlocProvider(
                                   create: (context) =>
-                                      getIt<PriceMotorBaruCubit>()),
+                                      getIt<PriceMpCubit>()),
                               BlocProvider(
                                   create: (context) => getIt<SimulasiCubit>()),
                               // BlocProvider(
                               //     create: (context) =>
                               //         getIt<SubmitSimulationCubit>()),
                             ],
-                            child: MotorBaruPage(),
+                            child: MultyproductPage(),
                           ),
                         ),
                       );

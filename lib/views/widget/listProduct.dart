@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:simulation_credit/main.dart';
 import 'package:simulation_credit/views/cubits/cat_motorbaru_cubit.dart';
+import 'package:simulation_credit/views/cubits/cat_mp_cubit.dart';
 import 'package:simulation_credit/views/cubits/price_mobil_cubit.dart';
 import 'package:simulation_credit/views/cubits/price_motorbaru_cubit.dart';
 import 'package:simulation_credit/views/cubits/simulasi_cubit.dart';
@@ -11,7 +12,9 @@ import 'package:simulation_credit/views/screens/motorBaru_page.dart';
 import 'package:simulation_credit/views/screens/testingPage.dart';
 
 import '../cubits/cat_mobil_cubit.dart';
+import '../cubits/price_mp_cubit.dart';
 import '../cubits/var_mobil_cubit.dart';
+import '../cubits/var_mp_cubit.dart';
 import '../screens/multyproduct_page.dart';
 
 class ListProduct extends StatefulWidget {
@@ -30,6 +33,7 @@ class _ListProductState extends State<ListProduct> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
+            // motor baru
             GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -60,6 +64,7 @@ class _ListProductState extends State<ListProduct> {
                 ),
               ),
             ),
+            // mobil
             GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -89,6 +94,7 @@ class _ListProductState extends State<ListProduct> {
                         image: AssetImage('assets/images/mobil.jpg'))),
               ),
             ),
+            // MP
             GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -97,15 +103,15 @@ class _ListProductState extends State<ListProduct> {
                     builder: (context) => MultiBlocProvider(
                       providers: [
                         BlocProvider(
-                            create: (context) => getIt<CatMobilCubit>()),
+                            create: (context) => getIt<CatMpCubit>()),
                         BlocProvider(
-                            create: (context) => getIt<VarMobilCubit>()),
+                            create: (context) => getIt<VarMpCubit>()),
                         BlocProvider(
-                            create: (context) => getIt<PriceMobilCubit>()),
+                            create: (context) => getIt<PriceMpCubit>()),
                         BlocProvider(
                             create: (context) => getIt<SimulasiCubit>()),
                       ],
-                      child: MobilPage(),
+                      child: MultyproductPage(),
                     ),
                   ),
                 );
@@ -118,6 +124,7 @@ class _ListProductState extends State<ListProduct> {
                         image: AssetImage('assets/images/mp.jpg'))),
               ),
             ),
+            // motor bekas
             Container(
               height: 120,
               width: 120,

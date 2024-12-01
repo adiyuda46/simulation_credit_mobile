@@ -13,7 +13,10 @@ import 'package:simulation_credit/data/repositories/cat_motorbaru_repository.dar
 import 'package:simulation_credit/views/widget/result_simulasai.dart';
 import '../../core/injection/injection.dart';
 import '../cubits/cat_motorbaru_cubit.dart';
+import '../cubits/cat_mp_cubit.dart';
 import '../cubits/price_motorbaru_cubit.dart';
+import '../cubits/price_mp_cubit.dart';
+import '../cubits/var_mp_cubit.dart';
 import '../widget/listProductForm.dart';
 
 class MultyproductPage extends StatefulWidget {
@@ -42,12 +45,12 @@ class _MultyproductPageState extends State<MultyproductPage> {
   int?
       selectedJangkaWaktuValue; // Untuk menyimpan nilai Jangka Waktu sebagai integer
   int? priceInInt;
-  String typeProduct = "MOTOR BARU";
+  String typeProduct = "MULTYPORDUCT";
 
   @override
   void initState() {
     super.initState();
-    context.read<CatMotorBaruCubit>().categoryMotorbaru();
+    context.read<CatMpCubit>().categoryMp();
   }
 
   @override
@@ -76,16 +79,16 @@ class _MultyproductPageState extends State<MultyproductPage> {
           child: Column(
             children: [
               const ListProductForm(
-                currentPage: 'motorBaru',
+                currentPage: 'mp',
               ),
               const SizedBox(height: 24),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 38),
                 child: Column(
                   children: [
-                    BlocBuilder<CatMotorBaruCubit, CatMotorBaruState>(
+                    BlocBuilder<CatMpCubit, CatMpState>(
                       builder: (context, state) {
-                        if (state is CatMotorBaruInitial) {
+                        if (state is CatMpInitial) {
                           //return Center(child: CircularProgressIndicator());
                           return _buildShimmer();
                         } else if (state.error != null) {
@@ -94,7 +97,7 @@ class _MultyproductPageState extends State<MultyproductPage> {
                           _motorCategories =
                               state.categoryMotorBaruResp!.category;
                           return CustomDropdown(
-                            label: "Tipe Motor",
+                            label: "Multiproduct",
                             value: _selectedValues['tipeMotor']!,
                             items: _motorCategories.isNotEmpty
                                 ? _motorCategories
@@ -109,8 +112,8 @@ class _MultyproductPageState extends State<MultyproductPage> {
                                 if (value != DEFAULT_OPTION) {
                                   typeProduct = value;
                                   context
-                                      .read<VarMotorBaruCubit>()
-                                      .VarianMotorBaru(value);
+                                      .read<VarMpCubit>()
+                                      .VarianMp(value);
                                 }
                               });
                             },
@@ -123,7 +126,7 @@ class _MultyproductPageState extends State<MultyproductPage> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    BlocBuilder<VarMotorBaruCubit, VarMotorBaruState>(
+                    BlocBuilder<VarMpCubit, VarMpState>(
                       builder: (context, state) {
                         if (state.error != null) {
                           return Center(child: Text('Error: ${state.error}'));
@@ -131,7 +134,7 @@ class _MultyproductPageState extends State<MultyproductPage> {
                           _motorVarian = state.varianMotorBaruResp!.varian;
                         }
                         return CustomDropdown(
-                          label: "Varian Motor",
+                          label: "Varian Multiproduct",
                           value: _selectedVarian['varianMotor']!,
                           items: _motorVarian,
                           onChanged: (value) {
@@ -146,8 +149,8 @@ class _MultyproductPageState extends State<MultyproductPage> {
                                     ""; // Reset price saat varian diubah
                                 if (value != DEFAULT_OPTION) {
                                   context
-                                      .read<PriceMotorBaruCubit>()
-                                      .priceMotorBaru(
+                                      .read<PriceMpCubit>()
+                                      .priceMp(
                                         _selectedValues['tipeMotor']!,
                                         value,
                                       );
@@ -163,7 +166,7 @@ class _MultyproductPageState extends State<MultyproductPage> {
                       },
                     ),
                     const SizedBox(height: 50),
-                    BlocBuilder<PriceMotorBaruCubit, PriceMotorBaruState>(
+                    BlocBuilder<PriceMpCubit, PriceMpState>(
                       builder: (context, state) {
                         String displayedPrice =
                             _motorPrice.isEmpty ? "" : _motorPrice;
@@ -311,7 +314,7 @@ class _MultyproductPageState extends State<MultyproductPage> {
                       totalDownPayment: response.totalDownPayment,
                       dp: selectedUangMuka,
                       tenor: selectedJangkaWaktu,
-                      typeProduct: "MOTOR BARU",
+                      typeProduct: "MULTYPORDUCT",
                       totalAmount: response.totalPembayaran,
                     );
                   }
